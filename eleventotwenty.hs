@@ -1,4 +1,4 @@
-module ElevenToTwenty (encodeModified) where
+module ElevenToTwenty (decodeModified, encodeDirect, encodeModified, EncodeResult(..)) where
 
 import OneToTen
 
@@ -11,3 +11,16 @@ encodeModified = map getEncodeResult . pack
         getEncodeResult [x] = Single x
         getEncodeResult xs = Multiple (length xs) (head xs)
 
+decodeModified :: [EncodeResult a] -> [a]
+decodeModified = concatMap decodeEncodeResult
+    where
+        decodeEncodeResult (Single x) = [x]
+        decodeEncodeResult (Multiple len x) = replicate len x
+
+encodeDirect :: (Eq a) => [a] -> [EncodeResult a]
+encodeDirect [] = []
+encodeDirect [x] = [Single x]
+encodeDirect all@(x:xs) = if x == (head xs) then Multiple headDuplicates x:encodeDirect tailAfterDuplicates else Single x:encodeDirect xs
+    where
+        headDuplicates = length (takeWhile (==x) all)
+        tailAfterDuplicates = dropWhile (==x) xs

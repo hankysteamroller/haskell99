@@ -1,3 +1,4 @@
+module OneToTen (pack) where
 
 myLast :: [a] -> a
 myLast = head . reverse
