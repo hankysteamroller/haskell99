@@ -1,4 +1,4 @@
-module ElevenToTwenty (decodeModified, dupli, encodeDirect, encodeModified, EncodeResult(..), repli, dropEvery, split) where
+module ElevenToTwenty (decodeModified, dupli, encodeDirect, encodeModified, EncodeResult(..), repli, dropEvery, split, slice) where
 
 import OneToTen
 
@@ -40,3 +40,6 @@ split xs n = (keepSeconds takeWhile splitCond withIndex, keepSeconds dropWhile s
         keepSeconds f0 f1 ts = map snd (f0 f1 ts)
         splitCond (i, x) = i <= n
         withIndex = zip [1..] xs
+
+slice :: [a] -> Int -> Int -> [a]
+slice xs start end = [x | (i, x) <- (zip [1..] xs), i >= start && i <= end]
