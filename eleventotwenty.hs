@@ -1,4 +1,4 @@
-module ElevenToTwenty (decodeModified, encodeDirect, encodeModified, EncodeResult(..)) where
+module ElevenToTwenty (decodeModified, dupli, encodeDirect, encodeModified, EncodeResult(..), repli, dropEvery, split) where
 
 import OneToTen
 
@@ -24,3 +24,19 @@ encodeDirect all@(x:xs) = if x == (head xs) then Multiple headDuplicates x:encod
     where
         headDuplicates = length (takeWhile (==x) all)
         tailAfterDuplicates = dropWhile (==x) xs
+
+dupli :: [a] -> [a]
+dupli = concatMap (\x -> [x,x])
+
+repli :: [a] -> Int -> [a]
+repli xs n = xs >>= (replicate n)
+
+dropEvery :: [a] -> Int -> [a]
+dropEvery xs n = [y | (i,y) <- (zip [1..] xs), (mod i n) /= 0]
+
+split :: [a] -> Int -> ([a], [a])
+split xs n = (keepSeconds takeWhile splitCond withIndex, keepSeconds dropWhile splitCond withIndex)
+    where
+        keepSeconds f0 f1 ts = map snd (f0 f1 ts)
+        splitCond (i, x) = i <= n
+        withIndex = zip [1..] xs
