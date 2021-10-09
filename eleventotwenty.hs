@@ -1,4 +1,4 @@
-module ElevenToTwenty (decodeModified, dupli, encodeDirect, encodeModified, EncodeResult(..), repli, dropEvery, split, slice) where
+module ElevenToTwenty (decodeModified, dupli, encodeDirect, encodeModified, EncodeResult(..), repli, dropEvery, split, slice, rotate) where
 
 import OneToTen
 
@@ -43,3 +43,18 @@ split xs n = (keepSeconds takeWhile splitCond withIndex, keepSeconds dropWhile s
 
 slice :: [a] -> Int -> Int -> [a]
 slice xs start end = [x | (i, x) <- (zip [1..] xs), i >= start && i <= end]
+
+shiftL :: [a] -> [a]
+shiftL (x:xs) = xs ++ [x]
+
+shiftR :: [a] -> [a]
+shiftR xs = last xs:init xs
+
+rotate :: [a] -> Int -> [a]
+rotate [] _ = []
+rotate [x] _ = [x]
+rotate xs 0 = xs
+rotate xs 1 = shiftL xs 
+rotate xs (-1) = shiftR xs
+rotate xs n | (n > 0) = rotate (shiftL xs) (n - 1)
+rotate xs n | (n < 0) = rotate (shiftR xs) (n + 1)
