@@ -1,4 +1,4 @@
-module ElevenToTwenty (decodeModified, dupli, encodeDirect, encodeModified, EncodeResult(..), repli, dropEvery, split, slice, rotate) where
+module ElevenToTwenty (decodeModified, dupli, encodeDirect, encodeModified, EncodeResult(..), repli, dropEvery, split, slice, rotate, removeAt) where
 
 import OneToTen
 
@@ -58,3 +58,6 @@ rotate xs 1 = shiftL xs
 rotate xs (-1) = shiftR xs
 rotate xs n | (n > 0) = rotate (shiftL xs) (n - 1)
 rotate xs n | (n < 0) = rotate (shiftR xs) (n + 1)
+
+removeAt :: Int -> [a] -> (a, [a])
+removeAt n xs = ((!!) xs (n - 1), [x | (i, x) <- zip [1..] xs, i /= n])
