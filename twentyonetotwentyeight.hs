@@ -18,3 +18,14 @@ rnd_select' :: [a] -> Int -> IO [a]
 rnd_select' xs n = newStdGen >>= (\x -> return (rndSelectP x))
     where 
         rndSelectP gen = map ((!!) xs) $ take n $ randomRs (0, (length xs-1)) gen
+
+diff_select :: Int -> Int -> IO [Int]
+diff_select n to = rnd_select [1..to] n
+
+rnd_permu :: [a] -> IO [a]
+rnd_permu []     = return []
+rnd_permu (x:xs) = do
+    rand <- randomRIO (0, (length xs))
+    rest <- rnd_permu xs
+    return $ let (ys,zs) = splitAt rand rest
+             in ys++(x:zs)
