@@ -1,3 +1,4 @@
+import Data.List (groupBy, sortBy, tails)
 import System.Random
 
 insertAt :: a -> [a] -> Int -> [a]
@@ -29,3 +30,16 @@ rnd_permu (x:xs) = do
     rest <- rnd_permu xs
     return $ let (ys,zs) = splitAt rand rest
              in ys++(x:zs)
+
+combinations :: Int -> [a] -> [[a]]
+combinations 0 _  = return []
+combinations n xs = do
+    y:xs' <- tails xs
+    ys <- combinations (n-1) xs'
+    return (y:ys)
+
+lsort :: [[a]] -> [[a]]
+lsort = sortBy (\xs xs' -> length xs `compare` length xs')
+
+lfsort :: [[a]] -> [[a]]
+lfsort = concat . lsort . groupBy (\xs xs' -> length xs == length xs') . lsort
